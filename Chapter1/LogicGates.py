@@ -59,22 +59,7 @@ class BinaryGate(LogicGate):
             else:
                 print("Cannot Connect: NO EMPTY PINS on this gate")
     def setInput(self):
-        self.pinA = int(input("Enter Pin A input for gate " + self.getLabel() + "-->"))
-        self.pinB = int(input("Enter Pin B input for gate " + self.getLabel() + "-->"))
-
-class InputGate(BinaryGate):
-    def __init__(self, n):
-        BinaryGate.__init__(self, n)
-        self.pinA = None
-        self.pinB = None
-    def performGateLogic(self):
-        if self.pinA == None:
-            self.pinA = int(input("Enter Pin A input for gate " + self.getLabel() + "-->"))
-            return self.pinA
-        if self.pinB == None:
-            self.pinB = int(input("Enter Pin B input for gate " + self.getLabel() + "-->"))
-            return self.pinB
-
+        return int(input("Enter Pin A input for gate " + self.getLabel() + "-->"))
 
 class AndGate(BinaryGate):
 
@@ -179,11 +164,6 @@ class NotGate(UnaryGate):
         else:
             return 1
 
-class EmptyUniGate(UnaryGate):
-    def __init__(self, n):
-        UnaryGate.__init__(self, n)
-    def performGateLogic(self):
-        return self.getPin()
 
 
 class Connector:
@@ -200,27 +180,48 @@ class Connector:
         return self.togate
 #Q11
 
-class HalfAdder:
-    def __init__(self):
+class HalfAdder(BinaryGate):
+    def __init__(self,n,pinA=None,pinB=None):
         self.sumout = XorGate('Sum')
         self.carry = AndGate('Carry')
+        super().__init__(n)
+        self.pinA = pinA
+        self.pinB = pinB
+        if self.pinA== None:
+            self.pinA=self.setInput()
+        if self.pinB == None:
+            self.pinB=self.setInput()
 
-        # self.sumout.setNextPin(self)
 
 
     def getOutput(self):
-        self.sumout.setInput()
-        self.carry.pinA = self.sumout.pinA
-        self.carry.pinB = self.sumout.pinB
+        self.carry.pinA,self.sumout.pinA = self.pinA,self.pinA
+        self.carry.pinB, self.sumout.pinB = self.pinB, self.pinB
+
         sum_result = self.sumout.getOutput()
         carry_result = self.carry.getOutput()
 
         return sum_result, carry_result
 
-#Now extend that circuit and implement an 8 bit full-adder.
 
+#Q12 - Now extend that circuit and implement an 8 bit full-adder.
+class FullAdder:
+    def __init__(self):
+        self.ha1 = HalfAdder('ha1')
+        self.ha2 = HalfAdder('ha2',None,int())
+        self.orgate = OrGate('Orgate')
 
+    def getOutput(self):
+        sum_1, c_out1 = self.ha1.getOutput()
+        self.ha2.pinB = sum_1
 
-ha = HalfAdder()
+        sum_out, c_out2 = self.ha2.getOutput()
+
+        self.orgate.pinA = c_out2
+        self.orgate.pinB = c_out1
+        c_out3 =  self.orgate.getOutput()
+        return sum_out,c_out3
+
+ha = FullAdder()
 print(ha.getOutput())
 
