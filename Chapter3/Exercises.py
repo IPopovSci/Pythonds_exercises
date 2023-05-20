@@ -35,21 +35,25 @@ def del_test():
         print("del item for dict of size", i, 'is', time_taken_set*1000, "milliseconds")
 
 #4. Given a list of numbers in random order, write an algorithm that works in O(n*log(n)) to find the kth smallest number in the list.
-# def find_k_smallest(size,k):
-#     rand_list = generate_random_list(size)
-#     print(rand_list)
-#     #print(set(sorted(rand_list)))
-#     small_nums = [size]
-#     k_num_tofind = k
-#     smallest_number = rand_list[0]
-#     for i, _ in enumerate(rand_list):
-#         while len(small_nums)<k:
-#
-#
-#             if rand_list[i]<=smallest_number:
-#                 smallest_number=rand_list[i]
-#                 rand_list.pop(i)
-#         if smallest_number not in small_nums:
-#             small_nums.append(smallest_number)
-#             print(small_nums)
-# find_k_smallest(20,5)
+#This is O(k*n), good enough?
+def find_k_smallest(size,k):
+    smallest_numbers=[]
+
+    list = generate_random_list(size)
+    current_smallest = list[0]
+    last_smallest=0
+    while len(smallest_numbers)<k:
+        for i,number in enumerate(list):
+            if number<current_smallest and number>last_smallest:
+                current_smallest=number
+        last_smallest = current_smallest
+        smallest_numbers.append(current_smallest)
+        current_smallest = list[0]
+
+    #print(smallest_numbers)
+
+for i in [10,100,1000,10000]:
+    size = i
+    test = Timer("find_k_smallest(size,10)", "from __main__ import size,find_k_smallest,random")
+    time_taken = test.timeit(number=1)
+    print("finding k smallest integer in list size", i, 'takes', time_taken*1000, "milliseconds")
