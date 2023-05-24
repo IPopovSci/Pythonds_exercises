@@ -36,6 +36,7 @@ def IntoPost(infix_expression):
 
 def IntoPostImproved(infix_expression):
     prec = {}
+    prec['**'] = 5
     prec["*"] = 3
     prec["/"] = 3
     prec["+"] = 2
@@ -43,8 +44,8 @@ def IntoPostImproved(infix_expression):
     prec["("] = 1
     opstack = Stack()
     output = []
-    operands = ['*','/','+','-']
-    infix_expression = list(infix_expression.replace(' ',''))
+    operands = ['*','/','+','-','**']
+    infix_expression = infix_expression.split()
     for token in infix_expression:
         if token=='(':
             opstack.push(token)
@@ -59,7 +60,7 @@ def IntoPostImproved(infix_expression):
                   output.append(opstack.pop())
             opstack.push(token)
 
-        elif isinstance(token,str):
+        elif token.isdigit() or token.isalpha():
             output.append(token)
         else:
             print('Something went horribly wrong')
@@ -67,7 +68,7 @@ def IntoPostImproved(infix_expression):
         output.append(opstack.pop())
     return output
 
-#print(print(IntoPostImproved("( A + B ) * C - ( D - E ) * ( F + G )")))
+print(IntoPostImproved("5 * 3 ** ( 4 - 2 )"))
 
 def PostfixEval(postfix,dir_eval=False):
     opstack = Stack()
@@ -92,5 +93,5 @@ def PostfixEval(postfix,dir_eval=False):
         return output
     else:
         return eval(output)
-print(PostfixEval('7 8 + 3 2 + /',dir_eval=True))
+#print(PostfixEval('7 8 + 3 2 + /',dir_eval=True))
 
