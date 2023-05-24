@@ -69,29 +69,28 @@ def IntoPostImproved(infix_expression):
 
 #print(print(IntoPostImproved("( A + B ) * C - ( D - E ) * ( F + G )")))
 
-def PostInto(postfix,dir_eval=False):
+def PostfixEval(postfix,dir_eval=False):
     opstack = Stack()
     output = []
     operands = ['*','/','+','-']
     postfix = list(postfix.replace(' ',''))
     for token in postfix:
-
         if token in operands and (not opstack.isEmpty()):
             if token != '/':
                 num1=opstack.pop()
                 num2=opstack.pop()
                 output=('('+num1+token+num2+')')
                 opstack.push('('+num1+token+num2+')')
-            if token == '/':
+            else:
                 num2 = opstack.pop()
                 num1 = opstack.pop()
                 output = ('(' + num1 + token + num2 + ')')
                 opstack.push('(' + num1 + token + num2 + ')')
         elif token.isdigit() or token.isalpha():
             opstack.push(token)
-    if eval==False:
+    if dir_eval==False:
         return output
     else:
         return eval(output)
-print(PostInto('7 8 + 3 2 + /',dir_eval=True))
+print(PostfixEval('7 8 + 3 2 + /',dir_eval=True))
 
