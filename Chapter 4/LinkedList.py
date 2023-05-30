@@ -90,6 +90,8 @@ class UnorderedList:
         found = False
         if self.length==0:
             raise Exception("Can't delete last item in an empty list")
+        elif self.length==1:
+            self.tail.setData(None)
         while not found and current!=None:
             if current.getData() == item:
                 found = True
@@ -101,7 +103,7 @@ class UnorderedList:
                 self.tail=current #Set tail to last value, meaning item was the last element;
             elif not found:
                 raise Exception('Item not found')
-        if previous == None: #If the element to remove was the first one
+        if previous == None and self.tail.getData()!=None: #If the element to remove was the first one
             self.head = current.getNext()
         elif found: #Remove the element found
             previous.setNext(current.getNext())
@@ -173,15 +175,10 @@ class UnorderedList:
 
 mylist = UnorderedList()
 mylist.add(31)
-mylist.add(77)
-mylist.add(17)
-mylist.add(31)
-mylist.add(93)
-mylist.add(26)
-mylist.add(54)
+#mylist.add(59)
 print(mylist)
 #mylist.append(100)
-mylist.pop(3)
+mylist.remove(31)
 print(mylist)
 print('head',mylist.head)
 print('tail',mylist.tail)

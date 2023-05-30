@@ -2,6 +2,14 @@ class Stack:
     def __init__(self):
         self.items = []
 
+    def __str__(self):
+        return str(self.items)
+
+    def aslist(self):
+        return self.items
+    def __iter__(self):
+        return iter(self.aslist())
+
     def isEmpty(self):
         return self.items == []
 

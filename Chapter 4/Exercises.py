@@ -1,5 +1,5 @@
 from Stack import Stack
-
+import copy
 #Write a function revstring(mystr) that uses a stack to reverse the characters in a string.
 def revstring(mystr):
     revstr = str()
@@ -73,7 +73,7 @@ def divideBy2(integer):
         stack.push(remainder)
     while not stack.isEmpty():
         binary += str(stack.pop())
-    print(binary)
+    return stack,binary
 
 #divideBy2(233)
 
@@ -89,5 +89,47 @@ def baseConverter(decNumber,base):
         newbasenum += digits[stack.pop()]
     return newbasenum
 
-print(baseConverter(25,2))
-print(baseConverter(256,16))
+# print(baseConverter(25,2))
+# print(baseConverter(256,16))
+
+#1.Convert the following values to binary using “divide by 2.” Show the stack of remainders.
+'''
+    17
+    45
+    96
+'''
+def divideBy2(integer):
+    stack = Stack()
+    binary = str()
+    while integer:
+        remainder = integer % 2
+        integer = integer//2
+        stack.push(remainder)
+    stack_copy=copy.deepcopy(stack)
+    while not stack.isEmpty():
+        binary += str(stack.pop())
+    return binary,list(stack_copy)
+print('Exercise 1:Convert the following values to binary using “divide by 2.” Show the stack of remainders')
+print(divideBy2(17))
+print(divideBy2(45))
+print(divideBy2(96))
+
+'''2.Convert the following infix expressions to prefix (use full parentheses):
+    (A+B)*(C+D)*(E+F)
+    A+((B+C)*(D+E))
+    A*B*C*D+E+F
+Answer:
+1. **+AB+CD+EF
+2. +A*+BC+DE
+3. ++***ABCDEF
+'''
+'''3. Convert the above infix expressions to postfix (use full parentheses).
+Answer:
+1. AB+CD+*EF+*
+2. ABC+DE+*+
+3. AB*C*D*E+F+'''
+
+'''4. Convert the above infix expressions to postfix using the direct conversion algorithm. Show the stack as the conversion takes place.'''
+from Postfix import IntoPostImproved
+IntoPostImproved('( A + B ) * ( C + D ) * ( E + F ) ')
+

@@ -45,8 +45,12 @@ def IntoPostImproved(infix_expression):
     opstack = Stack()
     output = []
     operands = ['*','/','+','-','**']
+
     infix_expression = infix_expression.split()
+
+    print('Conversion stack:')
     for token in infix_expression:
+        print(opstack)
         if token=='(':
             opstack.push(token)
         elif token==')' and not opstack.isEmpty():
@@ -64,11 +68,11 @@ def IntoPostImproved(infix_expression):
             output.append(token)
         else:
             print('Something went horribly wrong')
+
     while not opstack.isEmpty():
         output.append(opstack.pop())
+    print('End of conversion')
     return output
-
-print(IntoPostImproved("5 * 3 ** ( 4 - 2 )"))
 
 def PostfixEval(postfix,dir_eval=False):
     opstack = Stack()
