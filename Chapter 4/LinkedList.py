@@ -145,6 +145,24 @@ class UnorderedList:
             previous.setNext(item_node)
         self.length += 1
 
+    def pop(self,position):
+        current = self.head
+        future=self.head
+        list_pos=0
+        if position>self.length:
+            raise Exception("Out of bounds")
+        while current.getNext()!=None and list_pos<position: #general case for not 0 and not end
+            list_pos+=1
+            current=future
+            future = current.getNext()
+        if position == 0: #For position 0
+            self.head = self.head.getNext()
+        elif position == self.length: #Case for tail
+            self.tail = future
+        else: #General case
+            current.setNext(future.getNext())
+        self.length -= 1
+
 
 
 
@@ -161,9 +179,9 @@ mylist.add(31)
 mylist.add(93)
 mylist.add(26)
 mylist.add(54)
-#print(mylist)
+print(mylist)
 #mylist.append(100)
-mylist.insert(8,101)
+mylist.pop(3)
 print(mylist)
 print('head',mylist.head)
 print('tail',mylist.tail)
