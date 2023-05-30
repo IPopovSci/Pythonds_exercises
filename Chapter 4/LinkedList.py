@@ -3,8 +3,8 @@ class Node:
         self.data = initdata
         self.next = None
 
-    # def __repr__(self):
-    #     return f'Node object: (Data:{self.data},next:{self.next})'
+    def __repr__(self):
+        return f'Node object: (Data:{self.data},next:{self.next})'
     def __str__(self):
         return str(self.data)
     def getData(self):
@@ -37,6 +37,17 @@ class UnorderedList:
             nodes.append(self.tail.data)
         nodes.append("None")
         return str(nodes)
+
+    def __repr__(self):
+        node = self.head
+        nodes = []
+        while node is not None:
+            nodes.append(node.data)
+            node = node.getNext()
+        if self.tail:
+            nodes.append(self.tail.data)
+        nodes.append("None")
+        return [i for i in repr(nodes)]
     def __iter__(self):
         node = self.head
         while node is not None:
@@ -44,6 +55,7 @@ class UnorderedList:
             node = node.getNext()
         yield self.tail
 
+    #def __contains__(self, item):
     def isEmpty(self):
         return self.head == None
 
@@ -52,6 +64,7 @@ class UnorderedList:
         temp = Node(item)
         if self.tail==None:
             self.tail = temp
+            self.length+=1
         else:
             temp.setNext(self.head)
             self.head = temp
@@ -85,12 +98,12 @@ class UnorderedList:
                 current = current.getNext()
             elif self.tail.getData()==item:
                 found=True
-                self.tail=current
+                self.tail=current #Set tail to last value, meaning item was the last element;
             elif not found:
                 raise Exception('Item not found')
-        if previous == None:
+        if previous == None: #If the element to remove was the first one
             self.head = current.getNext()
-        elif found and self.tail:
+        elif found: #Remove the element found
             previous.setNext(current.getNext())
 
         self.length-=1
@@ -111,21 +124,31 @@ class UnorderedList:
         item_node = Node(item)
         self.tail=item_node
         self.length+=1
-    # def insert(self,position,item):
-    #     current = self.head
-    #     item_node = Node(item)
-    #     list_pos=0
-    #     if current:
-    #         while list_pos != position:
-    #             list_pos+=1
-    #             if list_pos != position:
-    #                 current = current.getNext()
-    #             else:
-    #                 #future_node = current.getNext()
-    #                 self.head=item_node
-    #                 #self.head = future_node
-    #
-    #     #current.setNext(item_node)
+    def insert(self,position,item):
+        current = self.head
+        item_node = Node(item)
+        list_pos=0
+        if position>self.length:
+            raise Exception("Out of bounds")
+        while current.getNext()!=None and list_pos<position: #general case for not 0 and not end
+            list_pos+=1
+            previous=current
+            current=current.getNext()
+        if position == 0: #For position 0
+            item_node.setNext(current)
+            self.head = item_node
+        elif position == self.length: #Case for tail
+            current.setNext(self.tail)
+            self.tail=item_node
+        else: #General case
+            item_node.setNext(current)
+            previous.setNext(item_node)
+        self.length += 1
+
+
+
+
+
 
 
 
@@ -138,13 +161,9 @@ mylist.add(31)
 mylist.add(93)
 mylist.add(26)
 mylist.add(54)
-print(mylist)
-mylist.remove(31)
-print('head',mylist.head)
-mylist.remove(31)
-mylist.remove(54)
+#print(mylist)
 #mylist.append(100)
-#mylist.insert(1,27)
+mylist.insert(8,101)
 print(mylist)
 print('head',mylist.head)
 print('tail',mylist.tail)
