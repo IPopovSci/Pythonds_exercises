@@ -76,6 +76,7 @@ def jug_solver(jug1,jug2,target):
 Everyone must get across the river to continue on the journey. However, if the cannibals ever outnumber the missionaries on either bank, \ 
 the missionaries will be eaten. Find a series of crossings that will get everyone safely to the other side of the river.'''
 #Boat must have at least 1 person
+#This is probably violation of geneva convention, but it works, badly.
 class bank:
     def __init__(self,people): #0 for missionaries, 1 for cannibals,-1 for empty; people ->list
         self.left = people
@@ -118,4 +119,107 @@ class boat:
                 bank.left_m=bank.left.count(0)
                 bank.left_c=bank.left.count(1)
         else:
-            print("Boat can't travel empty")
+            raise Exception('Boat can"t travel empty')
+cache=[{(0,0,0,1,1,1):()}]
+moves = [[0, 0], [1, 1], [0, 1], [1], [0]]
+def move_choice(moves,boat,bank,step):
+
+
+    if step % 2 == 0:
+        boat.location = 0
+    else:
+        boat.location = 1
+    while len(boat.seating)==0:
+        load_choice = random.choice(moves)
+        for choice in load_choice:
+            if boat.location == 0 and choice in bank.left:
+
+                boat.load(bank, choice)
+                print('Choice', choice, 'bank left', bank.left, boat.seating)
+            elif boat.location == 1 and choice in bank.right:
+                # print('Choice is',choice)
+
+                boat.load(bank, choice)
+                print('Choice', choice, 'bank right', bank.right, boat.seating)
+            else:
+                return move_choice(moves,boat,bank,step)
+    else:
+        return boat,bank
+def recursive_boat(bank,boat,cache,step,moves):
+    fail=False
+
+    if step % 2 == 0:
+        boat.location = 0
+    else:
+        boat.location = 1
+    print('-'*10,len(bank.right))
+    while not fail:
+        print('step #',step,step % 2)
+
+        #print(moves)
+        #load_choice=random.choice(moves)
+        #print('load choice',load_choice)
+        print('from', boat.location)
+        boat,bank=move_choice(moves,boat,bank,step)
+        boat.transfer(bank)
+        #print('Transferred ', boat.seating, 'to', boat.location)
+
+        print('On left side: ', bank.left, 'on right side:', bank.right)
+
+        if (bank.left_c>bank.left_m and (not bank.left_m==0)) or (bank.right_c>bank.right_m and (not bank.right_m==0)):
+            print('fail')
+            if step>=1:
+                step-=1
+                cache=cache[:-1]
+            else:
+                step=0
+                cache=[{(0,0,0,1,1,1):()}]
+            bank.left = list(list(cache[step].keys())[0])
+            bank.right = list(list(cache[step].values())[0])
+            print('cache',cache)
+            #moves = [move for move in moves if move != load_choice]
+
+            if len(moves)==0:
+                moves = [[0, 0], [1, 1], [0, 1], [1], [0]]
+
+            if step % 2 == 0:
+                boat.location = 0
+            else:
+                boat.location = 1
+            #fail=True #why the heck did this broke everything
+            #return recursive_boat(bank,boat,cache,step,moves)
+        else:
+            print('success')
+            moves = [[0, 0], [1, 1], [0, 1], [1], [0]]
+            step += 1
+
+            print('boat location',boat.location)
+            cache.append({tuple(bank.left):tuple(bank.right)})
+            if len(bank.right) == 6:
+                fail = True
+                return print(cache)
+    if not fail:
+        return recursive_boat(bank, boat, cache, step, moves)
+    else:
+        fail=True
+        return 'Done'
+# input_bank=bank([0,0,0,1,1,1])
+# input_boat=boat(2)
+# recursive_boat(input_bank,input_boat,cache,0,moves)
+#Pascal Triangle
+def pascal_triangle(n):
+    if n==1:
+        print('[1]'.center(100, ' '))
+        print('[1,1]'.center(100, ' '))
+        return [1,1]
+    else:
+        old_row = pascal_triangle(n-1)
+        new_row=[1]
+        for i in range(len(old_row)-1):
+            new_row.append(old_row[i]+old_row[i+1])
+        new_row.append(1)
+        print(f'{new_row}'.center(100, ' '))
+        return new_row
+
+
+pascal_triangle(n=10)
