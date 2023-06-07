@@ -196,12 +196,12 @@ def recursive_boat(bank,boat,cache,step,moves):
             print('boat location',boat.location)
             cache.append({tuple(bank.left):tuple(bank.right)})
             if len(bank.right) == 6:
-                fail = True
+                # fail = True
                 return print(cache)
     if not fail:
         return recursive_boat(bank, boat, cache, step, moves)
     else:
-        fail=True
+        # fail=True
         return 'Done'
 # input_bank=bank([0,0,0,1,1,1])
 # input_boat=boat(2)
@@ -221,5 +221,41 @@ def pascal_triangle(n):
         print(f'{new_row}'.center(100, ' '))
         return new_row
 
+#
+# pascal_triangle(n=10)
 
-pascal_triangle(n=10)
+'''Suppose you are a computer scientist/art thief who has broken into a major art gallery. All you have with you to haul out your stolen art is your \
+knapsack which only holds pounds of art, but for every piece of art you know its value and its weight. \
+Write a dynamic programming function to help you maximize your profit. \
+Here is a sample problem for you to use to get started: Suppose your knapsack can hold a total weight of 20. You have 5 items as follows:
+item     weight      value
+  1        2           3
+  2        3           4
+  3        4           8
+  4        5           8
+  5        9          10'''
+items={1:{2:3},2:{3:4},3:{4:8},4:{5:8},5:{9:10}}
+def arthaul(items):
+    max_weight=20
+    item_weights=[]
+    item_values=[]
+    item_nos=[]
+    total_values=[0]*(max_weight+1)
+    for idx,item in enumerate(list(items.items())):
+
+        item_no=item[0]
+        item_weight=list(item[1].keys())[0]
+        item_value=list(item[1].values())[0]
+        item_weights.append(item_weight)
+        item_values.append(item_value)
+        item_nos.append(item_no)
+    total_wv = zip(item_weights, item_values, item_nos)
+    for item in total_wv:
+        for weight in range(max_weight,min(item_weights),
+                            -1):  # All possible weights, assuming at least 1 item was taken
+            if item[0]<=weight:
+                total_values[weight]=max(item[1]+(total_values[weight-item[0]]),total_values[weight])
+
+    print(total_values)
+
+arthaul(items)
