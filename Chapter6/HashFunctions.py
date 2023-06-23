@@ -18,6 +18,7 @@ def hash_ana(astring, tablesize):
 
 
 # How to deal with situation where there are no empty slots left? -< Exercise
+#Set a load factor limit, increase the size based on rehashing technique (So that it still visits everything)
 class HashTable:
     def __init__(self):
         self.size = 11
