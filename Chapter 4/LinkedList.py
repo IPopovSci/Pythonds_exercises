@@ -175,10 +175,9 @@ class UnorderedList:
 
 mylist = UnorderedList()
 mylist.add(31)
-#mylist.add(59)
+mylist.add(59)
+mylist.add(101)
 print(mylist)
-#mylist.append(100)
-mylist.remove(31)
-print(mylist)
+print(mylist.next)
 print('head',mylist.head)
 print('tail',mylist.tail)
